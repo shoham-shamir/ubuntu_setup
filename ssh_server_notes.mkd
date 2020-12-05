@@ -1,0 +1,119 @@
+# initial setup
+## update everything
+
+sudo apt-get update
+sudo apt-get upgrade
+
+## get vim
+sudo apt install vim
+
+## increase history size in .bashrc
+vim .bashrc
+
+
+# ssh deamon
+
+## install
+sudo apt-get install openssh-server
+
+## keep a copy of original sshd_config file and make it read-only
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.original
+sudo chmod a-w /etc/ssh/sshd_config.original
+
+## generate keys
+First verify that sshd_config file has:
+Port 22
+PasswordAuthentication yes
+
+Start or restart ssh service (see below)
+
+On the _client_ computer:
+ssh-keygen -t rsa -b 4096
+ssh-copy-id shoham@10.100.102.16
+
+(the ssh-copy-id only works for port 22)
+
+Back to the _server_, change the sshd_config file:
+Port _something other than 22_
+PasswordAuthentication no
+
+Restart the ssh service. This will ensure that connection is allowed
+only using keys.
+
+## modify the sshd_config
+I've made several changes to make it more secure, the main diffs are below:
+Port 8431
+PermitRootLogin no
+PasswordAuthentication no
+AllowTcpForwarding no
+X11Forwarding no
+ClientAliveInterval 300
+ClientAliveCountMax 1
+MaxStartups 2
+AllowUsers shoham git
+
+See ``man sshd_config`` for more info.
+
+## to start, stop and check status
+sudo systemctl start ssh
+sudo systemctl restart ssh
+sudo systemctl stop ssh
+sudo systemctl status ssh
+
+## enable firewall and allow ssh
+sudo ufw allow 8431  _the number of the SSH port_
+sudo ufw enable
+sudo ufw status
+
+# git server
+## install git
+sudo apt install git
+
+## add git as a user (so no sudo available for git)
+shoham@shoham-XPS-8500:~$ sudo adduser --disabled-password git
+_(the only eay to loging to git is with ssh keys because of --disabled-password)_
+
+## change to git and create .ssh directory
+shoham@shoham-XPS-8500:~$ sudo su git
+git@shoham-XPS-8500:/home/shoham$ cd 
+git@shoham-XPS-8500:~$ mkdir ~/.ssh && chmod 700 ~/.ssh
+
+## as shoham - I copied my own authorized_keys
+shoham@shoham-XPS-8500:~$ sudo cp ~/.ssh/authorized_keys /home/git/.ssh/
+**I need to change the ownership and permissions of /home/git/.ssh/authorized_keys using chown and chmod!**
+
+## as shoham - change to the non interactive git shell
+shoham@shoham-XPS-8500:~$ which git-shell
+/usr/bin/git-shell
+shoham@shoham-XPS-8500:~$ sudo vim /etc/shells  # add the path to git-shell from last command
+shoham@shoham-XPS-8500:~$ sudo chsh git -s $(which git-shell)
+
+_(the last command changes the user 'git' login shell to git-shell, which is non
+  interactive, so further login is not possible, all other stuff must be done
+  as shoham using sudo)_
+
+## as shoham - set up git repositories - see example below
+cd /home/git/
+sudo mkdir ios-backup-extractor.git
+cd ios-backup-extractor.git && sudo git init --bare && cd ..
+sudo chown -R git.git ios-backup-extractor.git/
+
+## cloning and adding
+To clone a new repo you initialized on your private git server
+$ git clone git@<IPADDRESS>:<repo-name> ~/git/
+
+To add your new private git server to an existing repo
+$ git remote add origin git@<IPADDRESS>:<repo-name>.git
+
+# configure ssh on client
+Create .ssh/config file, see ssh_config file in this directory.
+In short, I added git@10.100.102.16 (port 8431) as greave.
+
+To use:
+git clone greave:ubuntu_setup.git
+
+To check origin:
+git remote -v
+
+(to switch to a new origin:
+git remote set-url origin greave:/home/git/ubuntu_setup.git)
