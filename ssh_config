@@ -1,0 +1,11 @@
+# home server
+Host spear
+    HostName 10.100.102.16
+    User shoham
+    Port 8431
+
+# home git server
+Host greave
+    HostName 10.100.102.16
+    User git
+    Port 8431
