@@ -1,0 +1,26 @@
+#!/bin/bash
+echo "my Ubuntu setup"
+
+# update and upgrade
+echo "updating and upgrading"
+sudo apt-get update
+sudo apt-get upgrade
+
+# python3 packages
+echo "installing python3 packages"
+sudo apt-get install pyflakes3 pycodestyle python3-pip ipython3 python3-sphinx
+
+# uncomment next line if needed
+#sudo apt install build-essential cmake python3-dev
+
+# latex
+echo "installing latex"
+sudo apt-get install texlive-full
+
+# utilities
+echo "installing utilities"
+sudo apt-get install dos2unix silversearcher-ag okular
+
+# wls stuff, uncomment for wls
+#echo "installing wls related"
+#sudo apt-get install x11-apps
