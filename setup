@@ -1,26 +1,109 @@
 #!/bin/bash
-echo "my Ubuntu setup"
+echo "starting ubuntu setup"
+echo "enter the path to ubuntu_setup directory"
+read setup_path
 
+
+# ============================
 # update and upgrade
+# ============================
 echo "updating and upgrading"
 sudo apt-get update
 sudo apt-get upgrade
 
+
+# ============================
 # python3 packages
+# ============================
+# this assumes python3 is already installed!
 echo "installing python3 packages"
 sudo apt-get install pyflakes3 pycodestyle python3-pip ipython3 python3-sphinx
 
 # uncomment next line if needed
 #sudo apt install build-essential cmake python3-dev
 
+
+# ============================
 # latex
+# ============================
 echo "installing latex"
 sudo apt-get install texlive-full
 
+
+# ============================
 # utilities
+# ============================
 echo "installing utilities"
 sudo apt-get install dos2unix silversearcher-ag okular
 
 # wls stuff, uncomment for wls
 #echo "installing wls related"
 #sudo apt-get install x11-apps
+
+
+# ============================
+# git setup
+# ============================
+echo "git setup"
+git config --global user.email shoham.mth@gmail.com
+git config --global user.name shoham
+
+# edit comments with vim
+git config --global core.editor "vim"
+
+
+# ============================
+# set iptables
+# ============================
+
+
+# ============================
+# vim setup
+# ============================
+echo "vim setup"
+# prepare folders
+if [ ! -d $HOME/.vim ]
+then
+    echo "creating $HOME/.vim directory"
+    mkdir $HOME/.vim
+fi
+
+if [ ! -d $HOME/.vim/bundles ]
+then
+    echo "creating $HOME/.vim/bundles directory"
+    mkdir $HOME/.vim/bundles
+fi
+
+# clone Vundle to handle vim bundles
+echo "cloning Vundle to $HOME/.vim/bundle/Vundle.vim"
+git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/Vundle.vim
+
+
+# ============================
+# link files
+# ============================
+echo "linking files to ubuntu_setup"
+
+function symb_link {
+    echo "creating symbolic link between $setup_path/.$1 and $HOME/.$1"
+    ln -s $setup_path/.$1 $HOME/.$1
+}
+
+for fname in vimrc bashrc profile bash_profile bash_aliases bash_logout
+do
+    symb_link fname
+done
+
+# link ssh config
+echo "creating symbolic link between $setup_path/ssh_config and $HOME/.ssh/config"
+
+
+# ============================
+# todo
+# ============================
+echo "======================="
+echo "do the follwing things:"
+echo "======================="
+echo "1. test numpy, pandas and matplotlib"
+echo "2. run vim and then :PluginInstall to install remaining bundles"
+echo "3. create a key using 'ssh-keygen -t rsa -b 4096' and add to server (see ssh_server_notes.mkd)"
