@@ -91,11 +91,12 @@ function symb_link {
 
 for fname in vimrc bashrc profile bash_profile bash_aliases bash_logout
 do
-    symb_link fname
+    symb_link $fname
 done
 
 # link ssh config
 echo "creating symbolic link between $setup_path/ssh_config and $HOME/.ssh/config"
+ln -s $setup_path/ssh_config $HOME/.ssh/config
 
 
 # ============================
