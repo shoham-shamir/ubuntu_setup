@@ -110,8 +110,9 @@ nnoremap <leader>g :YcmCompleter GoTo<CR>
 " Syntastic
 " ---------
 let g:syntastic_python_python_exec = 'python3'
-let g:syntastic_python_checkers = ["pyflakes", "pycodestyle"] "checkers to use
+let g:syntastic_python_checkers = ["flake8", "pycodestyle"] "checkers to use
 let g:syntastic_python_pycodestyle_args = "--ignore=E121,E123,E126,E133,E226,E241,E242,E704,W503,W504,W505,E501 --max-line-length=160" "pycodestyle args
+let g:syntastic_python_flake8_args = "--max-line-length=160" "flake8 args
 
 " below are the recomended settings for newbies from Syntastic doc
 set statusline+=%#warningmsg#

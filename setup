@@ -17,11 +17,13 @@ sudo apt-get upgrade
 # ============================
 # this assumes python3 is already installed!
 echo "installing python3 packages"
-sudo apt-get install pyflakes3 pycodestyle python3-pip ipython3 python3-sphinx
+sudo apt-get install python3-pip ipython3 python3-sphinx
 
 # uncomment next line if needed
 #sudo apt install build-essential cmake python3-dev
 
+# flake8 works better with python3 than pyflakes3
+pip3 install flake8 pycodestyle
 
 # ============================
 # latex
@@ -50,6 +52,28 @@ git config --global user.name shoham
 
 # edit comments with vim
 git config --global core.editor "vim"
+
+
+# ============================
+# nextsilicon stuff
+# ============================
+# clone repositories
+git clone git@github.com:nextsilicon/nextapps.git
+git clone git@github.com:nextsilicon/nextresearch.git
+
+# read and install
+less dev/nextresearch/README.md  # read it!
+pip3 install -r dev/nextresearch/projection/requirements-dev.txt
+pip3 install -r dev/nextresearch/projection/requirements.txt 
+pip3 install -r dev/nextresearch/projection/requirements-plot.txt 
+
+# install projection as package
+cd dev/nextresearch/
+sudo pip3 install -e projection
+
+# necessary utilities
+sudo apt-get install qt5-default
+sudo apt install graphviz
 
 
 # ============================
