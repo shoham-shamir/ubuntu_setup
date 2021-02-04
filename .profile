@@ -10,9 +10,14 @@
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
+    # include .bash_profile and .bashrc if it exists
+    if [ -f $HOME/.bash_profile ]; then
+	source "$HOME/.bash_profile"
+    else
+	# .bash_profile should load .bashrc
+	if [ -f "$HOME/.bashrc" ]; then
+	    source "$HOME/.bashrc"
+	fi
     fi
 fi
 

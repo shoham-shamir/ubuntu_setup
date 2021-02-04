@@ -18,7 +18,7 @@ alias h?='history | grep'
 
 
 # ==============================================================================
-# display
+# display (for WLS)
 # ==============================================================================
 # remember to start xming
-alias display='export DISPLAY=:0'
+# alias display='export DISPLAY=:0'

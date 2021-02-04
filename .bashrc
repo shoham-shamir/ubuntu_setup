@@ -115,3 +115,15 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+
+# search history with arrows
+# arrow up
+bind '"\e[A": history-search-backward'
+# arrow down
+bind '"\e[B": history-search-forward'
+
+
+# PYTHONPATH was empty, so I add my stuff
+PYTHONPATH="$HOME/dev/misc/:$PYTHONPATH"
+export PYTHONPATH
